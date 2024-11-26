@@ -1,5 +1,6 @@
 const gameContainer = document.getElementById("gameContainer");
 const speedDisplay = document.getElementById("speedDisplay");
+const scoreDisplay = document.getElementById("score");
 const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
 let apple = { x: 5, y: 5 };
@@ -90,6 +91,7 @@ function update() {
     console.log((gridSize * gridSize - snake.length) / (gridSize * gridSize));
     speed = speed - speed * 0.04 * ((gridSize * gridSize - snake.length) / (gridSize * gridSize));
     speedDisplay.textContent = Math.floor(speed);
+    scoreDisplay.textContent = snake.length - 1;
     apple.x = Math.floor(Math.random() * gridSize);
     apple.y = Math.floor(Math.random() * gridSize);
   }
