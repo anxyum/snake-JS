@@ -3,7 +3,8 @@ const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
 let apple = { x: 5, y: 5 };
 let direction = { x: 0, y: 0 };
-let speed = 400;
+let speed = 50;
+let game = false;
 
 function createGrid() {
   for (let i = 0; i < gridSize * gridSize; i++) {
@@ -17,28 +18,47 @@ function draw() {
     cell.className = "";
   });
   gameContainer.childNodes[apple.y * 20 + apple.x].classList.add("apple");
-  for (let i = 0; i < snake.length; i++) {
+  for (let i = 0; i < snake.length-1; i++) {
     gameContainer.childNodes[(snake[i].y * 20 + snake[i].x) % (gridSize * gridSize)].classList.add(
       "snake"
     );
   }
+  gameContainer.childNodes[(snake[snake.length - 1].y * 20 + snake[snake.length - 1].x) % (gridSize * gridSize)].classList.add(
+    "snake-head"
+  );
+}
+
+function gameOver() {
+  alert("Game Over");
+  snake = [{ x: 10, y: 10 }];
+  apple = { x: 5, y: 5 };
+  direction = { x: 0, y: 0 };
+  game = false;
 }
 
 function update() {
+  if (!game) {
+    return
+  }
+
   const head = snake[snake.length - 1];
   const newHead = { x: head.x + direction.x, y: head.y + direction.y };
   console.log(newHead);
 
+  for (let i = 0; i < snake.length; i++) {
+    if (snake[i].x === newHead.x && snake[i].y === newHead.y) {
+      gameOver();
+      return;
+    }
+  }
+
   if (
-    gridSize < newHead.x ||
+    gridSize - 1 < newHead.x ||
     newHead.x < 0 ||
-    gridSize < newHead.y ||
+    gridSize - 1 < newHead.y ||
     newHead.y < 0
   ) {
-    alert("Game Over");
-    snake = [{ x: 10, y: 10 }];
-    apple = { x: 5, y: 5 };
-    direction = { x: 0, y: 0 };
+    gameOver();
     return;
   }
 
@@ -46,7 +66,8 @@ function update() {
   if (newHead.x !== apple.x || newHead.y !== apple.y) {
     snake.shift();
   } else {
-    aplle
+    apple.x = Math.floor(Math.random() * gridSize);
+    apple.y = Math.floor(Math.random() * gridSize);
   }
 }
 
@@ -57,6 +78,10 @@ function gameLoop() {
 }
 
 function handleKey(event) {
+  if (!game) {
+    game = true;
+  }
+
   switch (event.key) {
     case "ArrowUp":
       if (direction.y === 0) direction = { x: 0, y: -1 };

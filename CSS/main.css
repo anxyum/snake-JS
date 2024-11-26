@@ -26,3 +26,7 @@ body {
 .snake {
   background-color: #0f0;
 }
+
+.snake-head {
+  background-color: #0a0;
+}
