@@ -1,4 +1,5 @@
 const gameContainer = document.getElementById("gameContainer");
+const speedDisplay = document.getElementById("speedDisplay");
 const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
 let apple = { x: 5, y: 5 };
@@ -44,20 +45,21 @@ function update() {
   }
 
   if (keys_pressed.length > 0) {
-    direction = keys_pressed[0];
+    key = keys_pressed[0];
     keys_pressed.shift();
-    switch (direction) {
-      case "ArrowUp":
-        direction = { x: 0, y: -1 };
+    console.log(key);
+    switch (key) {
+      case "z":
+        if (direction.y === 0) direction = { x: 0, y: -1 };
         break;
-      case "ArrowDown":
-        direction = { x: 0, y: 1 };
+      case "s":
+        if (direction.y === 0) direction = { x: 0, y: 1 };
         break;
-      case "ArrowLeft":
-        direction = { x: -1, y: 0 };
+      case "q":
+        if (direction.x === 0) direction = { x: -1, y: 0 };
         break;
-      case "ArrowRight":
-        direction = { x: 1, y: 0 };
+      case "d":
+        if (direction.x === 0) direction = { x: 1, y: 0 };
         break;
     }
   }
@@ -80,12 +82,14 @@ function update() {
     gameOver();
     return;
   }
-  
+
   snake.push(newHead);
   if (newHead.x !== apple.x || newHead.y !== apple.y) {
     snake.shift();
   } else {
-    speed = speed * 0.96;
+    console.log((gridSize * gridSize - snake.length) / (gridSize * gridSize));
+    speed = speed - speed * 0.04 * ((gridSize * gridSize - snake.length) / (gridSize * gridSize));
+    speedDisplay.textContent = Math.floor(speed);
     apple.x = Math.floor(Math.random() * gridSize);
     apple.y = Math.floor(Math.random() * gridSize);
   }
