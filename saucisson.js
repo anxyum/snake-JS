@@ -32,7 +32,7 @@ function draw() {
 }
 
 function gameOver() {
-  alert(`Game Over\nscore: ${snake.length - 1}`);
+  alert(`Game Over\nscore: ${snake.length - 1}\nspeed: ${Math.floor(speed)}`);
   snake = [{ x: 10, y: 10 }];
   apple = { x: 5, y: 5 };
   direction = { x: 0, y: 0 };
