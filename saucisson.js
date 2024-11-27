@@ -1,7 +1,8 @@
 const gameContainer = document.getElementById("gameContainer");
 const speedDisplay = document.getElementById("speedDisplay");
 const scoreDisplay = document.getElementById("score");
-const gridSize = 20;
+const gridSize = 16;
+const gridCells = gridSize * gridSize;
 let snake = [{ x: 10, y: 10 }];
 let apple = { x: 5, y: 5 };
 let direction = { x: 0, y: 0 };
@@ -10,7 +11,7 @@ let game = false;
 let keys_pressed = [];
 
 function createGrid() {
-  for (let i = 0; i < gridSize * gridSize; i++) {
+  for (let i = 0; i < gridCells; i++) {
     const cell = document.createElement("div");
     gameContainer.appendChild(cell);
   }
@@ -20,14 +21,14 @@ function draw() {
   gameContainer.childNodes.forEach((cell) => {
     cell.className = "";
   });
-  gameContainer.childNodes[apple.y * 20 + apple.x].classList.add("apple");
+  gameContainer.childNodes[apple.y * gridSize + apple.x].classList.add("apple");
   for (let i = 0; i < snake.length - 1; i++) {
-    gameContainer.childNodes[snake[i].y * 20 + snake[i].x].classList.add(
+    gameContainer.childNodes[snake[i].y * gridSize + snake[i].x].classList.add(
       "snake"
     );
   }
   gameContainer.childNodes[
-    snake[snake.length - 1].y * 20 + snake[snake.length - 1].x
+    snake[snake.length - 1].y * gridSize + snake[snake.length - 1].x
   ].classList.add("snake-head");
 }
 
@@ -67,7 +68,20 @@ function update() {
 
   const head = snake[snake.length - 1];
   const newHead = { x: head.x + direction.x, y: head.y + direction.y };
-  for (let i = 0; i < snake.length; i++) {
+
+  snake.push(newHead);
+  if (newHead.x !== apple.x || newHead.y !== apple.y) {
+    snake.shift();
+  } else {
+    console.log((gridCells - snake.length) / gridCells);
+    speed = speed * (0.98 + 0.02 * (snake.length / gridCells));
+    speedDisplay.textContent = Math.floor(speed);
+    scoreDisplay.textContent = snake.length - 1;
+    apple.x = Math.floor(Math.random() * gridSize);
+    apple.y = Math.floor(Math.random() * gridSize);
+  }
+
+  for (let i = 0; i < snake.length-1; i++) {
     if (snake[i].x === newHead.x && snake[i].y === newHead.y) {
       gameOver();
       return;
@@ -82,18 +96,6 @@ function update() {
   ) {
     gameOver();
     return;
-  }
-
-  snake.push(newHead);
-  if (newHead.x !== apple.x || newHead.y !== apple.y) {
-    snake.shift();
-  } else {
-    console.log((gridSize * gridSize - snake.length) / (gridSize * gridSize));
-    speed = speed - speed * 0.04 * ((gridSize * gridSize - snake.length) / (gridSize * gridSize));
-    speedDisplay.textContent = Math.floor(speed);
-    scoreDisplay.textContent = snake.length - 1;
-    apple.x = Math.floor(Math.random() * gridSize);
-    apple.y = Math.floor(Math.random() * gridSize);
   }
 }
 
