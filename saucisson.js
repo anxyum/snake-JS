@@ -80,7 +80,7 @@ function update() {
     speedDisplay.textContent = Math.floor(speed);
     scoreDisplay.textContent = snake.length - 1;
 
-    let pas_bon = false;
+    let pas_bon = true;
     while (pas_bon) {
       pas_bon = false;
       apple.x = Math.floor(Math.random() * gridSize);
