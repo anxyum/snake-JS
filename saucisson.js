@@ -39,6 +39,8 @@ function gameOver() {
   direction = { x: 0, y: 0 };
   game = false;
   speed = 200;
+  speedDisplay.textContent = Math.floor(speed);
+  scoreDisplay.textContent = snake.length - 1;
 }
 
 function update() {
@@ -77,11 +79,23 @@ function update() {
     speed = speed * (0.98 + 0.02 * (snake.length / gridCells));
     speedDisplay.textContent = Math.floor(speed);
     scoreDisplay.textContent = snake.length - 1;
-    apple.x = Math.floor(Math.random() * gridSize);
-    apple.y = Math.floor(Math.random() * gridSize);
+
+    let pas_bon = false;
+    while (pas_bon) {
+      pas_bon = false;
+      apple.x = Math.floor(Math.random() * gridSize);
+      apple.y = Math.floor(Math.random() * gridSize);
+
+      for (let i = 0; i < snake.length; i++) {
+        if (apple.x === snake[i].x && apple.y === snake[i].y) {
+          pas_bon = true;
+          break;
+        }
+      }
+    }
   }
 
-  for (let i = 0; i < snake.length-1; i++) {
+  for (let i = 0; i < snake.length - 1; i++) {
     if (snake[i].x === newHead.x && snake[i].y === newHead.y) {
       gameOver();
       return;
